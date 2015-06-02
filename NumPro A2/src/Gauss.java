@@ -9,9 +9,8 @@ public class Gauss {
 	 * R: Eine obere Dreiecksmatrix der Groesse n x n 
 	 * b: Ein Vektor der Laenge n
 	 */
-	/**Xi = [Bi - Sum(j=1, to n, of Aij*Xj)] / Aii*/
 	public static double[] backSubst(double[][] R, double[] b) {
-		//TODO: Diese Methode ist zu implementieren
+		/*formula (basically): Xi = [Bi - Sum(j=1, to n, of Aij*Xj)] / Aii*/
 		int n = b.length;
 		double[] x = new double[n];
 		for(int i = n-1; i > -1; i--) {
@@ -35,7 +34,7 @@ public class Gauss {
 	 * b: Ein Vektor der Laenge n
 	 */
 	public static double[] solve(double[][] A, double[] b) {
-		//TODO: Diese Methode ist zu implementieren
+		//declare vector/matrix length and matrix needed for solution, etc
 		int n = b.length;
 		int j = 0;
 		double alpha = 0.0;
@@ -106,6 +105,7 @@ public class Gauss {
 	 */
 	public static double[] solveSing(double[][] A) {
 		//TODO: Diese Methode ist zu implementieren
+		//declare matrix/vector length, vectors/matrix needed for solving, etc
 		int n = A.length;
 		int j = 0;
 		double alpha = 0.0;
@@ -113,6 +113,8 @@ public class Gauss {
 		double[] p = new double[n];
 		double[][] L = new double[n][n];
 		
+		/**INCOMPLETE################*/
+		/*Modified Gauss Elimination (not modified yet)*/
 		for(int k = 0; k < n-1; k++) {
 			alpha = Math.abs(A[k][k]); j = k;
 			for(int s = k+1; s < n; s++) {
@@ -136,6 +138,33 @@ public class Gauss {
 				}
 			}
 		}
+		/**########################*/
+		
+		//find out where T ends
+		int Tn = 0, vn = 0;
+		for(int i = 0; i < n; i++) {
+			if(A[i][i] != 0) { Tn = i; }
+		}
+		
+		//declare the T and v matrix/vector for doing Tx = -v
+		double[][] T = new double[Tn][Tn];
+		double[] v = new double[vn];
+		
+		//copy values from A into T and v
+		for(int x = 0; x < Tn; x++) {
+			for(int y = 0; y < Tn; y++) {
+				T[x][y] = A[x][y];
+			}
+			v[x] = -1 * A[Tn+1][x];
+		}
+		
+		//calculate solution x for Tx = -v (write it straight into v again since we wont need that anymore afterwards
+		v = backSubst(T, v);
+		//copy values of said x (vector v) into p, then put 1 after it, as described in task description
+		for(int i = 0; i < Tn; i++) {
+			p[i] = v[i];
+		}
+		p[Tn+1] = 1;
 		
 		return p;
 	}
