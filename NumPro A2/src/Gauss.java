@@ -40,47 +40,28 @@ public class Gauss {
 		double alpha = 0.0;
 		double[][] L = new double[n][n];
 		
-	//	FOR k=1,...,n-1 DO
 		for(int k = 0; k < n-1; k++) {
-	//		alpha = |a(k,k)|; j=k;
 			alpha = Math.abs(A[k][k]); j = k;
-	//		FOR s=k+1,...,n DO
 			for(int s = k+1; s < n; s++) {
-	//			IF |a(s,k)| > alpha THEN
 				if(Math.abs(A[s][k]) > alpha) {
-	//				alpha = |a(s,k)|; j=s;
 					alpha = Math.abs(A[s][k]); j=s;
-	//			ENDIF
 				}
-	//		ENDFOR
 			}
-	//	
-	//		# Pivotelement ist a(j,k) und Pivotzeile ist j
-	//		FOR i=k,...,n DO
+			
+			//# Pivotelement ist a(j,k) und Pivotzeile ist j
 			for(int i = k; i < n; i++) {
-	//			alpha = a(k,i); a(k,i) = a(j,i); a(j,i) = alpha;
 				alpha = A[k][i]; A[k][i] = A[j][i]; A[j][i] = alpha;
-	//		ENDFOR
 			}
-	//		alpha = b(j); b(j) = b(k); b(k) = alpha;
 			alpha = b[j]; b[j] = b[k]; b[k] = alpha;
-	//
-	//		# Eliminationsschritt
-	//		FOR s=k+1,...,n DO
+			
+			//# Eliminationsschritt
 			for(int s = k+1; s < n; s++) {
-	//			l(s,k) = a(s,k)/a(k,k);
 				L[s][k] = A[s][k] / A[k][k];
-	//			b(s) = b(s) - l(s,k)b(k);
 				b[s] = b[s] - L[s][k]*b[k];
-	//			FOR i=k+1,...,n DO
-				for(int i = k+1; i < n; i++) {
-	//				a(s,i) = a(s,i) - l(s,k)a(k,i);
+				for(int i = k; i < n; i++) {
 					A[s][i] = A[s][i] - L[s][k]*A[k][i];
-	//			ENDFOR
 				}
-	//		ENDFOR
 			}
-	//	ENDFOR*/
 		}
 		
 		return backSubst(A, b);
@@ -98,7 +79,7 @@ public class Gauss {
 	 *  loesen Sie Tx = -v durch Rueckwaertssubstitution 
 	 * -Geben Sie den Vektor (x,1,0,...,0) zurueck
 	 * 
-	 * Sollte A doch intvertierbar sein, kann immer ein Pivot-Element gefunden werden(>=1E-10).
+	 * Sollte A doch invertierbar sein, kann immer ein Pivot-Element gefunden werden(>=1E-10).
 	 * In diesem Fall soll der 0-Vektor zurueckgegeben werden. 
 	 * PARAMETER: 
 	 * A: Eine singulaere Matrix der Groesse n x n 
@@ -113,51 +94,61 @@ public class Gauss {
 		double[][] L = new double[n][n];
 		double pseudoZero = 1E-10;
 		int Tn = 0;
-		System.out.println("Pseudozero:"+pseudoZero);
 		
-		System.out.print("Mod. Gauss Elim. ...\n");
 		/**TODO: INCOMPLETE################*/
 		/*Modified Gauss Elimination (not modified yet)*/
-		for(int k = 0; k < n; k++) {
+		System.out.print("Mod. Gauss Elim. ...\n");
+		for(int k = 0; k < n-1; k++) {
+			
+			System.out.print("\nGauss Matrix at step " + k + "\n");
+			for(int x = 0; x < n; x++) {
+				System.out.print(x + "{ ");
+				for(int y = 0; y < n; y++) {
+					System.out.print(A[x][y] + ", ");
+				}
+				System.out.print("}\n");
+			}
+			
 			alpha = Math.abs(A[k][k]); j = k;
 			for(int s = k+1; s < n; s++) {
 				if(Math.abs(A[s][k]) > alpha) {
 					alpha = Math.abs(A[s][k]); j=s;
 				}
 			}
-			System.out.println("Pivotelement: A["+k+"]["+j+"]");
 			
 			//check for whether the only "found" pivot element is effectively 0, if so, exit the loop
-			if(alpha < pseudoZero) break;
+			if(alpha < pseudoZero) { System.out.print("breaking gauss elim\n"); pseudoZero = 1.0; break; }
 			
 			//# Pivotelement ist a(j,k) und Pivotzeile ist j
 			for(int i = k; i < n; i++) {
 				alpha = A[k][i]; A[k][i] = A[j][i]; A[j][i] = alpha;
 			}
-			alpha = b[j]; b[j] = b[k]; b[k] = alpha;
+			//alpha = b[j]; b[j] = b[k]; b[k] = alpha;
 
 			//# Eliminationsschritt
 			for(int s = k+1; s < n; s++) {
 				L[s][k] = A[s][k] / A[k][k];
-				b[s] = b[s] - L[s][k]*b[k];
+				//b[s] = b[s] - L[s][k]*b[k];
 				for(int i = k; i < n; i++) {
-					System.out.println("Eliminating A["+s+"]["+i+"]");
 					A[s][i] = A[s][i] - L[s][k]*A[k][i];
 				}
 			}
-			System.out.println("Plotting Matrix: ");
-			for(int i1 =0; i1<n; i1++)
-			{
-				System.out.print("{");
-				for(int h =0; h<n; h++)
-				{
-					System.out.print(""+A[i1][h]+", ");
-				}
-				System.out.print("}");
-				System.out.println("");
-			}
 		}
 		/**########################*/
+		System.out.print("\nGauss Matrix after elim\n");
+		for(int x = 0; x < n; x++) {
+			System.out.print(x + "{ ");
+			for(int y = 0; y < n; y++) {
+				System.out.print(A[x][y] + ", ");
+			}
+			System.out.print("}\n");
+		}
+		
+		//Matrix is invertible, i.e. no pivot element <1E-10 was found, 
+		//so we never set pseudoZero to 1.0, so we return a vector with all zeroes
+		if(pseudoZero < 1.0) { return new double[n]; }
+		//otherwise we set pseudoZero correctly again and move on
+		else { pseudoZero = 1E-10; }
 		
 		System.out.print("Determining T matrix size; n = " + n);
 		//find out where T ends
@@ -170,7 +161,6 @@ public class Gauss {
 				break;
 			}
 		}
-
 		System.out.print("; Tn = " + Tn + "\n");
 		
 		//declare the T and v matrix/vector for doing Tx = -v
