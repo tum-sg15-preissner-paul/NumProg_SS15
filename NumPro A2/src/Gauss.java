@@ -89,14 +89,12 @@ public class Gauss {
 		int n = A.length;
 		int j = 0;
 		double alpha = 0.0;
-		double[] b = new double[n];
 		double[] p = new double[n];
 		double[][] L = new double[n][n];
 		double pseudoZero = 1E-10;
 		int Tn = 0;
 		
-		/**TODO: INCOMPLETE################*/
-		/*Modified Gauss Elimination (not modified yet)*/
+		/*Modified Gauss Elimination*/
 		System.out.print("Mod. Gauss Elim. ...\n");
 		for(int k = 0; k < n-1; k++) {
 			
@@ -123,18 +121,16 @@ public class Gauss {
 			for(int i = k; i < n; i++) {
 				alpha = A[k][i]; A[k][i] = A[j][i]; A[j][i] = alpha;
 			}
-			//alpha = b[j]; b[j] = b[k]; b[k] = alpha;
 
 			//# Eliminationsschritt
 			for(int s = k+1; s < n; s++) {
 				L[s][k] = A[s][k] / A[k][k];
-				//b[s] = b[s] - L[s][k]*b[k];
 				for(int i = k; i < n; i++) {
 					A[s][i] = A[s][i] - L[s][k]*A[k][i];
 				}
 			}
 		}
-		/**########################*/
+
 		System.out.print("\nGauss Matrix after elim\n");
 		for(int x = 0; x < n; x++) {
 			System.out.print(x + "{ ");

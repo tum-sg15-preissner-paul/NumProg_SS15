@@ -32,6 +32,7 @@ public class Test {
 		double xA[] = { 1, -1 };
 		double x[];
 
+		
 		/******************************/
 		/* Test der Klasse Gauss */
 		/******************************/
