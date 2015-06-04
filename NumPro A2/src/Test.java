@@ -31,7 +31,6 @@ public class Test {
 		double xC[] = { -3, 1, 0, 1 };//{ 1, 1 };
 		double xA[] = { 1, -1 };
 		double x[];
-
 		
 		/******************************/
 		/* Test der Klasse Gauss */
