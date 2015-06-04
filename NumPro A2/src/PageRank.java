@@ -12,7 +12,34 @@ public class PageRank {
 	 */
 	public static double[][] buildProbabilityMatrix(int[][] L, double rho) {
 		//TODO: Diese Methode ist zu implementieren
-		return new double[2][2];
+		int n = L.length;
+		double[][] A = new double[n][n];
+		double[] linkCounts = new double[n];
+		
+		//Lij = 1 if j links to i
+		//for each node (j), calculate how many outgoing links
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++) {
+				 if(L[i][j] == 1) linkCounts[j]++;
+			}
+		}
+		
+		//-> Aix = 1/(sum of all Ljx), if j links to i (!!!)
+		//~aij = (1-p) * aij + p/n ---- p = rho
+		//Aij = ((1-p) * (1/sum)) + rho/n;
+		double nD = (double) n;
+		for(int i = 0; i < n; i++) {
+			for(int j = 0; j < n; j++) {
+				//aij is only 1/sum if j links to i, so if Lij == 1
+				if(L[i][j] == 1) {
+					A[i][j] = ((1 - rho) * (1.0/linkCounts[j]));
+				}
+				//we still add p/n, since that isnt affected by aij
+				A[i][j] += rho/nD;
+			}
+		}
+		
+		return A;
 	}
 
 	/**

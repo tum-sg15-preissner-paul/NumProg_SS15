@@ -104,7 +104,6 @@ public class Gauss {
 	 * A: Eine singulaere Matrix der Groesse n x n 
 	 */
 	public static double[] solveSing(double[][] A) {
-		//TODO: Diese Methode ist zu implementieren
 		//declare matrix/vector length, vectors/matrix needed for solving, etc
 		int n = A.length;
 		int j = 0;
@@ -112,8 +111,11 @@ public class Gauss {
 		double[] b = new double[n];
 		double[] p = new double[n];
 		double[][] L = new double[n][n];
+		double pseudoZero = 1E-10;
+		int Tn = 0;
 		
-		/**INCOMPLETE################*/
+		System.out.print("Mod. Gauss Elim. ...\n");
+		/**TODO: INCOMPLETE################*/
 		/*Modified Gauss Elimination (not modified yet)*/
 		for(int k = 0; k < n-1; k++) {
 			alpha = Math.abs(A[k][k]); j = k;
@@ -122,6 +124,9 @@ public class Gauss {
 					alpha = Math.abs(A[s][k]); j=s;
 				}
 			}
+			
+			//check for whether the only "found" pivot element is effectively 0, if so, exit the loop
+			if(alpha < pseudoZero) break;
 			
 			//# Pivotelement ist a(j,k) und Pivotzeile ist j
 			for(int i = k; i < n; i++) {
@@ -140,31 +145,49 @@ public class Gauss {
 		}
 		/**########################*/
 		
+		System.out.print("Determining T matrix size; n = " + n);
 		//find out where T ends
-		int Tn = 0, vn = 0;
 		for(int i = 0; i < n; i++) {
-			if(A[i][i] != 0) { Tn = i; }
+			//since the matrix should be perfectly diagonal by now, 
+			//our T matrix should end at the first element Aii that is effectively zero
+			if(A[i][i] > pseudoZero) { 
+				Tn = i; 
+			} else {
+				break;
+			}
 		}
+		System.out.print("; Tn = " + Tn + "\n");
 		
 		//declare the T and v matrix/vector for doing Tx = -v
 		double[][] T = new double[Tn][Tn];
-		double[] v = new double[vn];
+		double[] v = new double[Tn];
 		
+		System.out.print("\nCreating T matrix\n");
 		//copy values from A into T and v
 		for(int x = 0; x < Tn; x++) {
+			System.out.print(x + "{ ");
 			for(int y = 0; y < Tn; y++) {
 				T[x][y] = A[x][y];
+				System.out.print(T[x][y] + ", ");
 			}
-			v[x] = -1 * A[Tn+1][x];
+			v[x] = -1 * A[x][Tn];
+			System.out.print(" } v" +x+ "{" + v[x] + "}\n");
 		}
 		
+		System.out.print("\nDo Tx = -v:\n");
 		//calculate solution x for Tx = -v (write it straight into v again since we wont need that anymore afterwards
 		v = backSubst(T, v);
 		//copy values of said x (vector v) into p, then put 1 after it, as described in task description
 		for(int i = 0; i < Tn; i++) {
 			p[i] = v[i];
 		}
-		p[Tn+1] = 1;
+		p[Tn] = 1;
+		
+		//just visual output of p solution vector
+		System.out.print("p:{ ");
+		for(int i = 0; i < n; i++) {
+			System.out.print(p[i] + ", ");
+		} System.out.print("}\n");
 		
 		return p;
 	}
