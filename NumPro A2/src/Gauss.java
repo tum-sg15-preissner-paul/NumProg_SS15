@@ -113,17 +113,19 @@ public class Gauss {
 		double[][] L = new double[n][n];
 		double pseudoZero = 1E-10;
 		int Tn = 0;
+		System.out.println("Pseudozero:"+pseudoZero);
 		
 		System.out.print("Mod. Gauss Elim. ...\n");
 		/**TODO: INCOMPLETE################*/
 		/*Modified Gauss Elimination (not modified yet)*/
-		for(int k = 0; k < n-1; k++) {
+		for(int k = 0; k < n; k++) {
 			alpha = Math.abs(A[k][k]); j = k;
 			for(int s = k+1; s < n; s++) {
 				if(Math.abs(A[s][k]) > alpha) {
 					alpha = Math.abs(A[s][k]); j=s;
 				}
 			}
+			System.out.println("Pivotelement: A["+k+"]["+j+"]");
 			
 			//check for whether the only "found" pivot element is effectively 0, if so, exit the loop
 			if(alpha < pseudoZero) break;
@@ -138,9 +140,21 @@ public class Gauss {
 			for(int s = k+1; s < n; s++) {
 				L[s][k] = A[s][k] / A[k][k];
 				b[s] = b[s] - L[s][k]*b[k];
-				for(int i = k+1; i < n; i++) {
+				for(int i = k; i < n; i++) {
+					System.out.println("Eliminating A["+s+"]["+i+"]");
 					A[s][i] = A[s][i] - L[s][k]*A[k][i];
 				}
+			}
+			System.out.println("Plotting Matrix: ");
+			for(int i1 =0; i1<n; i1++)
+			{
+				System.out.print("{");
+				for(int h =0; h<n; h++)
+				{
+					System.out.print(""+A[i1][h]+", ");
+				}
+				System.out.print("}");
+				System.out.println("");
 			}
 		}
 		/**########################*/
@@ -156,6 +170,7 @@ public class Gauss {
 				break;
 			}
 		}
+
 		System.out.print("; Tn = " + Tn + "\n");
 		
 		//declare the T and v matrix/vector for doing Tx = -v
