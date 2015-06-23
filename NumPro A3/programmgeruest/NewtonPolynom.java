@@ -86,6 +86,9 @@ public class NewtonPolynom implements InterpolationMethod {
 	 * Es gilt immer: x und y sind gleich lang.
 	 */
 	private void computeCoefficients(double[] y) {
+		
+		 //tested to be correct: passed
+		
 		/* TODO: test this method, fix if broken */
 		int n = x.length;
 		double[][] tri = new double[n][n];
@@ -97,23 +100,26 @@ public class NewtonPolynom implements InterpolationMethod {
 		//		since those only need the values found in the fields to the left/up of said diagonal
 		for(int i = 0; i < n; i++) {
 			tri[i][0] = y[i];
-			int ctr = i;
-			for(int j = 0; j < i && ctr<=0; j++) {
-				tri[--ctr][j+1] = (tri[ctr+1][j] - tri[ctr][j]) / (x[ctr+1] - x[ctr]);  
-			}
+//			int ctr = i;
+//			for(int j = 0; j < i && ctr<=0; j++) {
+//				tri[--ctr][j+1] = (tri[ctr+1][j] - tri[ctr][j]) / (x[ctr+1] - x[ctr]);  
+//			}
 		}
 //^ this equals to this?
-//		for(int k = 1; k<n; k++)
-//		{
-//			for(int i= 0; i<k; i++)
-//			{
-//				tri[i][k] = (tri[i+1][k-1]-tri[i][k-1])/(x[i+k]-x[i]);
-//			}
-//		}
-		
+		for(int k = 1; k<n; k++)
+		{
+			for(int i= 0; i<(n-k); i++)
+			{
+				System.out.println("Plotting: a["+k+"]["+i);
+				tri[i][k] = (tri[i+1][k-1]-tri[i][k-1])/(x[i+k]-x[i]);
+			}
+		}
+		MatrixPlotter.plot(tri, n);
+		f = new double[n];
+		a = new double[n];
 		//copy right/down diagonal into 'f' array, copy first line into 'a' array
 		for(int i = 0; i < f.length; i++) {
-			f[i] = tri[i][i];
+			f[i] = tri[(f.length-1)-i][i];
 			a[i] = tri[0][i];
 		}
 	}
@@ -149,6 +155,20 @@ public class NewtonPolynom implements InterpolationMethod {
 	 *            neuer Stuetzwert
 	 */
 	public void addSamplingPoint(double x_new, double y_new) {
+		int size = x.length;
+		double[] newx = new double[size+1];
+		for(int i = 0; i<size;i++)
+		{
+			newx[i]=x[i];
+		}
+		newx[size]= x_new;
+		double[] f_new = new double[f.length+1];
+		f_new[0]=y_new;
+		for(int i =1;i<f.length+1; i++)
+		{
+			f_new[i] = (f_new[i-1] - f[i-1]) / (x[0] - x[i]); 
+		}
+		
 		/* TODO: diese Methode ist zu implementieren */
 	}
 
@@ -159,7 +179,22 @@ public class NewtonPolynom implements InterpolationMethod {
 	 */
 	@Override
 	public double evaluate(double z) {
-		/* TODO: diese Methode ist zu implementieren */
-		return 0.0;
+		
+		//faulty
+		System.out.print("p(x) = ");
+		double result=0;
+		for(int i =0; i<f.length; i++)
+		{
+			System.out.print("a["+i+"]");
+			double product =a[i];
+			for(int j=0; j<i;j++)
+			{
+				product*=(z-x[i]);
+				System.out.print("*(x-x["+j+"])");
+			}
+			System.out.print("+");
+			result+=product;
+		}
+		return result;
 	}
 }
