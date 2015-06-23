@@ -90,7 +90,7 @@ public class LinearInterpolation implements InterpolationMethod {
 	 */
 	@Override
 	public double evaluate(double z) {
-		/* TODO: would the linear function need a t? */
+		/* TODO: test */
 		//return y-limits if z exceeds x-limits
 		if(z > x[x.length - 1])
 			return y[y.length - 1];

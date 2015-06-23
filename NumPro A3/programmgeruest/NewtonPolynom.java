@@ -140,7 +140,7 @@ public class NewtonPolynom implements InterpolationMethod {
 	}
 
 	/**
-	 * addSamplintPoint fuegt einen weiteren Stuetzpunkt (x_new, y_new) zu x
+	 * addSamplingPoint fuegt einen weiteren Stuetzpunkt (x_new, y_new) zu x
 	 * hinzu. Daher werden die Membervariablen x, a und f vergoessert und
 	 * aktualisiert . Das gesamte Dreiecksschema muss dazu nicht neu aufgebaut
 	 * werden, da man den neuen Punkt unten anhaengen und das alte
@@ -169,7 +169,7 @@ public class NewtonPolynom implements InterpolationMethod {
 		x = newx;
 		
 		//this below seems wrong
-		/*TODO: expand existing "tri" array, calculate new now empty row/column, then the last f_new value is calculated that way*/
+		/*TODO: expand existing "tri" array, calculate new now empty row/column (similar to computeCoefficients), then the last f_new value is calculated that way*/
 		double[] f_new = new double[f.length+1];
 		/*f_new[0]=y_new;
 		for(int i =1;i<f.length+1; i++)
