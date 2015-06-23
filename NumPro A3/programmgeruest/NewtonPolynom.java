@@ -168,15 +168,19 @@ public class NewtonPolynom implements InterpolationMethod {
 		newx[size]= x_new;
 		x = newx;
 		
-		//this below seems wrong
-		/*TODO: expand existing "tri" array, calculate new now empty row/column (similar to computeCoefficients), then the last f_new value is calculated that way*/
 		double[] f_new = new double[f.length+1];
-		/*f_new[0]=y_new;
+		double[] a_new = new double[a.length+1];
+		f_new[0]=y_new;
 		for(int i =1;i<f.length+1; i++)
 		{
 			f_new[i] = (f_new[i-1] - f[i-1]) / (x[0] - x[i]); 
-		}*/
+			if(i != f.length+1) {
+				a_new[i] = a[i]; 
+			} else
+				a_new[i] = f_new[i];
+		}
 		f = f_new;
+		a = a_new;
 	}
 
 	/**
