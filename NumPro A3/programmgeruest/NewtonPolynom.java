@@ -101,7 +101,7 @@ public class NewtonPolynom implements InterpolationMethod {
 		for(int i = 0; i < n; i++) {
 			tri[i][0] = y[i];
 //			int ctr = i;
-//			for(int j = 0; j < i && ctr<=0; j++) {
+//			for(int j = 0; j < i; j++) { //no && ctr<=0 in the condition. ctr is an index in the array, should never be negative
 //				tri[--ctr][j+1] = (tri[ctr+1][j] - tri[ctr][j]) / (x[ctr+1] - x[ctr]);  
 //			}
 		}
@@ -155,21 +155,28 @@ public class NewtonPolynom implements InterpolationMethod {
 	 *            neuer Stuetzwert
 	 */
 	public void addSamplingPoint(double x_new, double y_new) {
+		/* TODO: test. fix if necessary */
 		int size = x.length;
 		double[] newx = new double[size+1];
-		for(int i = 0; i<size;i++)
-		{
-			newx[i]=x[i];
+		
+		for(int i = 0; i<size; i++) {
+			if(x[i] == x_new)
+				return;
+			else
+				newx[i]=x[i];
 		}
 		newx[size]= x_new;
+		x = newx;
+		
+		//this below seems wrong
+		/*TODO: expand existing "tri" array, calculate new now empty row/column, then the last f_new value is calculated that way*/
 		double[] f_new = new double[f.length+1];
-		f_new[0]=y_new;
+		/*f_new[0]=y_new;
 		for(int i =1;i<f.length+1; i++)
 		{
 			f_new[i] = (f_new[i-1] - f[i-1]) / (x[0] - x[i]); 
-		}
-		
-		/* TODO: diese Methode ist zu implementieren */
+		}*/
+		f = f_new;
 	}
 
 	/**
@@ -183,18 +190,18 @@ public class NewtonPolynom implements InterpolationMethod {
 		//faulty
 		System.out.print("p(x) = ");
 		double result=0;
-		for(int i =0; i<f.length; i++)
+		for(int i=0; i<f.length; i++)
 		{
-			System.out.print("a["+i+"]");
-			double product =a[i];
+			System.out.print("+a["+i+"]");
+			double product = a[i];
 			for(int j=0; j<i;j++)
 			{
-				product*=(z-x[i]);
+				product*=(z-x[j]);
 				System.out.print("*(x-x["+j+"])");
 			}
-			System.out.print("+");
 			result+=product;
 		}
+		System.out.print(" = ");
 		return result;
 	}
 }
