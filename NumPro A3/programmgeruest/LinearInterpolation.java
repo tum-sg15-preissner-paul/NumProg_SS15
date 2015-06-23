@@ -94,13 +94,15 @@ public class LinearInterpolation implements InterpolationMethod {
 		//return y-limits if z exceeds x-limits
 		if(z > x[x.length - 1])
 			return y[y.length - 1];
-		if(z < bottomLimit)
+		if(z < x[0])
 			return y[0];
 		
 		//Linear function y = mx+t -> x=z, m=(yi-yj / xi-xj)
 		for(int i = 0; i < x.length; i++) {
 			if(z >= x[i] && z <= x[i+1]) {
-				return (y[i]-y[i+1] / x[i]-x[i+1]) * z;
+				double m = (y[i]-y[i+1] / x[i]-x[i+1]);
+				double t = y[i]-m*x[i]; //y = mx+t -> t =y-mx
+				return (m*z+t);
 			}
 		}
 		

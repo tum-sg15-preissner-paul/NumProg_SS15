@@ -88,7 +88,7 @@ public class NewtonPolynom implements InterpolationMethod {
 	private void computeCoefficients(double[] y) {
 		/* TODO: test this method, fix if broken */
 		int n = x.length;
-		double[][] tri = double[n][n];
+		double[][] tri = new double[n][n];
 		
 		//for each line in the Dreiecksschema:
 		//	step 1: copy yi into the first column
@@ -98,10 +98,18 @@ public class NewtonPolynom implements InterpolationMethod {
 		for(int i = 0; i < n; i++) {
 			tri[i][0] = y[i];
 			int ctr = i;
-			for(int j = 0; j < i; j++) {
+			for(int j = 0; j < i && ctr<=0; j++) {
 				tri[--ctr][j+1] = (tri[ctr+1][j] - tri[ctr][j]) / (x[ctr+1] - x[ctr]);  
 			}
 		}
+//^ this equals to this?
+//		for(int k = 1; k<n; k++)
+//		{
+//			for(int i= 0; i<k; i++)
+//			{
+//				tri[i][k] = (tri[i+1][k-1]-tri[i][k-1])/(x[i+k]-x[i]);
+//			}
+//		}
 		
 		//copy right/down diagonal into 'f' array, copy first line into 'a' array
 		for(int i = 0; i < f.length; i++) {
