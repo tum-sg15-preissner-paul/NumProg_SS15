@@ -191,7 +191,8 @@ public class NewtonPolynom implements InterpolationMethod {
 	@Override
 	public double evaluate(double z) {
 		
-		//faulty
+		/* TODO: test. fix if necessary */
+		//not faulty anymore?
 		System.out.print("p(x) = ");
 		double result=0;
 		for(int i=0; i<f.length; i++)
@@ -205,7 +206,7 @@ public class NewtonPolynom implements InterpolationMethod {
 			}
 			result+=product;
 		}
-		System.out.print(" = ");
+		System.out.print(" = " + result);
 		return result;
 	}
 }

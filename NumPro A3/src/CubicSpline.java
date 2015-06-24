@@ -21,7 +21,7 @@ public class CubicSpline implements InterpolationMethod {
 	/** Stuetzwerte an den aequidistanten Stuetzstellen */
 	double[] y;
 
-	/** zu berechnende Ableitunge an den Stuetzstellen */
+	/** zu berechnende Ableitungen an den Stuetzstellen */
 	double yprime[];
 
 	/**
@@ -82,7 +82,68 @@ public class CubicSpline implements InterpolationMethod {
 	 * berechnet werden muessen.
 	 */
 	public void computeDerivatives() {
-		/* TODO: diese Methode ist zu implementieren */
+		/* TODO: test. fix if necessary */
+		
+		int nM = n-2;
+		double[][] A = new double[nM][nM];
+		double[] c = new double[nM];
+		
+		for(int i = 0; i < nM; i++) {
+			/*-----Matrix A part*/
+			A[i][i] = 4.0; //write 4 in diagonal A[i][i]
+			if(i < nM-1)
+				A[i+1][i] = A[i][i+1] = 1.0; //write 1 one to the right  and 1 one down from the 4
+			/*-----*/
+			
+			/*-----Vector c part*/
+			c[i]= y[i+2] - y[i];
+		}
+		c[0] -= h/3.0 * yprime[0];
+		c[nM-1] -= h/3.0 * yprime[n];
+			/*-----*/
+		
+		//Thomas-Algorithm, almost as seen on https://de.wikipedia.org/wiki/Thomas-Algorithmus
+		/*NOTE: Only works when there's at least two fields to calculate?*/
+		//TODO: Something is still off here, no idea what.
+		if(n > 3) {
+			//forward run
+			double[] c_ = new double[nM-1];
+			double[] d_ = new double[nM];
+			for(int i = 0; i < nM; i++) {
+				/*-----c'_i coefficients part*/
+				if(i == 0) {
+					c_[i] = 
+							A[i][i+1] 
+									/ A[i][i];
+				} else if(i < nM-1) {
+					c_[i] = A[i][i+1] / (A[i][i] - c_[i-1]*A[i][i-1]);
+				}
+				/*-----*/
+				
+				/*-----d'_i coefficients part*/
+				if(i == 0) {
+					d_[i] = c[i] / A[i][i];
+				} else {
+					c_[i] = (c[i] - c_[i-1]*A[i][i-1]) / (A[i][i] - c_[i-1]*A[i][i-1]);
+				}
+				/*-----*/
+			}
+			
+			//backward run
+			/*	x_n = d'_n,
+				x_i = d'_i - (c'_i * x_{i+1}); i = n-1, n-2, ..., 1*/
+			for(int i = nM; i > 0; i--) {
+				//yprime's empty fields are in its range 1 to n-1, the i here is from 0 to n-2, so need to map accordingly
+				if(i == nM) {
+					yprime[i+1] = d_[i];
+				} else {
+					yprime[i+1] = d_[i] - (c_[i] * yprime[i+2]);
+				}
+			}
+		} else if(n == 3){
+			//n == 3, then only one or no yprime is left to solve?
+			yprime[1] = (3.0/h * (y[2] - y[0] - (h/3.0)*yprime[0])) / 4.0;
+		}
 	}
 
 	/**
@@ -93,7 +154,19 @@ public class CubicSpline implements InterpolationMethod {
 	 */
 	@Override
 	public double evaluate(double z) {
-		/* TODO: diese Methode ist zu implementieren */
+		/* TODO: test. fix if necessary */
+		
+		if(z < a)
+			return y[0];
+		else if(z > b)
+			return y[n];
+		
+		double i = Math.floor(z/h);
+		z = (z-a)/(b-a); //assumption: Interval entirely positive
+		
+		//TODO: evaluate according Hermite Polynome
+		//foo
+		
 		return 0.0;
 	}
 }
