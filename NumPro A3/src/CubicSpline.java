@@ -82,7 +82,7 @@ public class CubicSpline implements InterpolationMethod {
 	 * berechnet werden muessen.
 	 */
 	public void computeDerivatives() {
-		/* TODO: test. fix if necessary */
+		/* TODO: test more. fix. */
 		
 		/*
 		 * 
@@ -91,7 +91,7 @@ public class CubicSpline implements InterpolationMethod {
 		 * 
 		 */
 		
-		int nM = n-1; //why n-2? Anzahl Stützstellen = n+1, Anzahl innerer Stützstellen n-1
+		int nM = n-1; //why n-2? Anzahl Stuetzstellen = n+1, Anzahl innerer Stuetzstellen n-1
 		double[][] A = new double[nM][nM];
 		double[] c = new double[nM];
 		
@@ -119,9 +119,7 @@ public class CubicSpline implements InterpolationMethod {
 			for(int i = 0; i < nM; i++) {
 				/*-----c'_i coefficients part*/
 				if(i == 0) {
-					c_[i] = 
-							A[i][i+1] 
-									/ A[i][i];
+					c_[i] = A[i][i+1] / A[i][i];
 				} else if(i < nM-1) {
 					c_[i] = A[i][i+1] / (A[i][i] - c_[i-1]*A[i][i-1]);
 				}
@@ -131,7 +129,7 @@ public class CubicSpline implements InterpolationMethod {
 				if(i == 0) {
 					d_[i] = c[i] / A[i][i];
 				} else {
-					c_[i] = (c[i] - c_[i-1]*A[i][i-1]) / (A[i][i] - c_[i-1]*A[i][i-1]);
+					d_[i] = (c[i] - d_[i-1]*A[i][i-1]) / (A[i][i] - d_[i-1]*A[i][i-1]);
 				}
 				/*-----*/
 			}
@@ -142,14 +140,25 @@ public class CubicSpline implements InterpolationMethod {
 			for(int i = nM; i > 0; i--) {
 				//yprime's empty fields are in its range 1 to n-1, the i here is from 0 to n-2, so need to map accordingly
 				if(i == nM) {
-					yprime[i+1] = d_[i];
+					yprime[i] = d_[i];
 				} else {
-					yprime[i+1] = d_[i] - (c_[i] * yprime[i+2]);
+					yprime[i] = d_[i] - (c_[i] * yprime[i+1]);
 				}
 			}
-		} else if(n == 3){
-			//n == 3, then only one or no yprime is left to solve?
-			yprime[1] = (3.0/h * (y[2] - y[0] - (h/3.0)*yprime[0])) / 4.0;
+		}
+		/*cases n = 3 and n = 2 dont need "dynamic" matrix calc, 
+		 * the few formulas can be calculated by hand (see NumProg Exercise 6) 
+		 * and are applicable for any given numbers*/
+		else if(n == 3) { 
+			//n == 3, then two yprime are left to solve
+			double a = ((3.0/h) * (y[2] - y[0]) - yprime[0]);
+			double b = ((3.0/h) * (y[3] - y[1]) - yprime[3]);
+			
+			yprime[1] = (4.0*a - b) / 15.0;
+			yprime[2] = (4.0*b - a) / 15.0;
+		} else if(n == 2) {
+			//n == 2, then only one yprime is left to solve
+			yprime[1] = ((3.0/h) * (y[2] - y[0]) - yprime[0]) / 4.0;
 		}
 	}
 
@@ -161,7 +170,7 @@ public class CubicSpline implements InterpolationMethod {
 	 */
 	@Override
 	public double evaluate(double z) {
-		/* TODO: test. fix if necessary */
+		/* TODO: test more. fix if necessary */
 		
 		if(z < a)
 			return y[0];
@@ -170,27 +179,19 @@ public class CubicSpline implements InterpolationMethod {
 		
 		// find interval
 		double i = Math.floor(z/h); 
-		//z = (z-a)/(b-a); //assumption: Interval entirely positive
 		
 		//transform x to interval [0,1]
-		t = (z-(a+i*h))/h;
+		double t = (z-(a+i*h))/h;
 		double[] H = new double[4];
 		
 		//Hermite Polynoms
-		H[0]= 1-3*t^2+2*t^3;
-		H[1]= 3*t^2-2*t^3;
-		H[2]=t-2*t^1+t^3;
-		H[3]= -t^2+t^3;
+		H[0]= 1 - 3 * Math.pow(t, 2.0) + 2 * Math.pow(t, 3.0);
+		H[1]= 3 * Math.pow(t, 2.0) - 2 * Math.pow(t, 3.0);
+		H[2]= t - 2 * Math.pow(t, 1.0) + Math.pow(t, 3.0);
+		H[3]= - Math.pow(t, 2.0) + Math.pow(t, 3.0);
 		
 		//return q(t)
-		return y[i]*H[0]+y[i+1]*H[1]+h*yprime[i]*H[2]+h*yprime[i+1]*H[3];
-		//TODO: evaluate according Hermite Polynome
+		return y[(int)i]*H[0]+y[(int)i + 1]*H[1]+h*yprime[(int)i]*H[2]+h*yprime[(int)i + 1]*H[3];
 		//foo fighters
-		
-		/*
-		 * 
-		 */
-		
-		return 0.0;
 	}
 }
