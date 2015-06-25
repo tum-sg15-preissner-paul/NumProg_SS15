@@ -90,7 +90,7 @@ public class LinearInterpolation implements InterpolationMethod {
 	 */
 	@Override
 	public double evaluate(double z) {
-		/* TODO: test */
+		/* Tested */
 		//return y-limits if z exceeds x-limits
 		if(z > x[x.length - 1])
 			return y[y.length - 1];
@@ -100,9 +100,9 @@ public class LinearInterpolation implements InterpolationMethod {
 		//Linear function y = mx+t -> x=z, m=(yi-yj / xi-xj)
 		for(int i = 0; i < x.length; i++) {
 			if(z >= x[i] && z <= x[i+1]) {
-				double m = (y[i]-y[i+1] / x[i]-x[i+1]);
+				double m = (y[i]-y[i+1]) / (x[i]-x[i+1]);
 				double t = y[i]-m*x[i]; //y = mx+t -> t =y-mx
-				return (m*z+t);
+				return (m*z +t);
 			}
 		}
 		

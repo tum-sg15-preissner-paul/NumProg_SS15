@@ -82,7 +82,7 @@ public class CubicSpline implements InterpolationMethod {
 	 * berechnet werden muessen.
 	 */
 	public void computeDerivatives() {
-		/* TODO: test more. fix. */
+		/* Tested */
 		
 		/*
 		 * 
@@ -91,7 +91,7 @@ public class CubicSpline implements InterpolationMethod {
 		 * 
 		 */
 		
-		int nM = n-1; //why n-2? Anzahl Stuetzstellen = n+1, Anzahl innerer Stuetzstellen n-1
+		int nM = n-1; // Anzahl Stuetzstellen = n+1, Anzahl innerer Stuetzstellen n-1
 		double[][] A = new double[nM][nM];
 		double[] c = new double[nM];
 		
@@ -111,7 +111,7 @@ public class CubicSpline implements InterpolationMethod {
 		
 		//Thomas-Algorithm, almost as seen on https://de.wikipedia.org/wiki/Thomas-Algorithmus
 		/*NOTE: Only works when there's at least two fields to calculate?*/
-		//TODO: Something is still off here, no idea what.
+		// Tested
 		if(n > 3) {
 			//forward run
 			double[] c_ = new double[nM-1];
@@ -137,10 +137,11 @@ public class CubicSpline implements InterpolationMethod {
 			//backward run
 			/*	x_n = d'_n,
 				x_i = d'_i - (c'_i * x_{i+1}); i = n-1, n-2, ..., 1*/
-			for(int i = nM; i > 0; i--) {
+			for(int i = nM-1; i > 0; i--) {
 				//yprime's empty fields are in its range 1 to n-1, the i here is from 0 to n-2, so need to map accordingly
-				if(i == nM) {
-					yprime[i] = d_[i];
+				if(i == nM-1) {
+					yprime[i] = 
+							d_[i];
 				} else {
 					yprime[i] = d_[i] - (c_[i] * yprime[i+1]);
 				}
@@ -170,7 +171,7 @@ public class CubicSpline implements InterpolationMethod {
 	 */
 	@Override
 	public double evaluate(double z) {
-		/* TODO: test more. fix if necessary */
+		/* Tested */
 		
 		if(z < a)
 			return y[0];
@@ -178,7 +179,11 @@ public class CubicSpline implements InterpolationMethod {
 			return y[n];
 		
 		// find interval
-		double i = Math.floor(z/h); 
+		double i = Math.floor((z-a)/h);
+		
+		if(i >= (double)n) { 
+			return y[n];
+		}
 		
 		//transform x to interval [0,1]
 		double t = (z-(a+i*h))/h;
@@ -191,7 +196,10 @@ public class CubicSpline implements InterpolationMethod {
 		H[3]= - Math.pow(t, 2.0) + Math.pow(t, 3.0);
 		
 		//return q(t)
-		return y[(int)i]*H[0]+y[(int)i + 1]*H[1]+h*yprime[(int)i]*H[2]+h*yprime[(int)i + 1]*H[3];
+		return y[(int)i]*H[0]
+				+y[(int)i + 1]*H[1]
+				+h*yprime[(int)i]*H[2]
+				+h*yprime[(int)i + 1]*H[3];
 		//foo fighters
 	}
 }

@@ -87,34 +87,25 @@ public class NewtonPolynom implements InterpolationMethod {
 	 */
 	private void computeCoefficients(double[] y) {
 		
-		 //tested to be correct: passed
+		//NOTE: as said in lecture, Newton is not suitable for anything but very small pictures
 		
-		/* TODO: test this method, fix if broken */
+		//tested to be correct: passed
 		int n = x.length;
 		double[][] tri = new double[n][n];
 		
 		//for each line in the Dreiecksschema:
 		//	step 1: copy yi into the first column
-		//	step 2: depending on the current line number:
-		//		calculate the fields in the diagonal to the "right" and "up" of tri[i][0] 
-		//		since those only need the values found in the fields to the left/up of said diagonal
 		for(int i = 0; i < n; i++) {
 			tri[i][0] = y[i];
-//			int ctr = i;
-//			for(int j = 0; j < i; j++) { //no && ctr<=0 in the condition. ctr is an index in the array, should never be negative
-//				tri[--ctr][j+1] = (tri[ctr+1][j] - tri[ctr][j]) / (x[ctr+1] - x[ctr]);  
-//			}
 		}
-//^ this equals to this?
 		for(int k = 1; k<n; k++)
 		{
 			for(int i= 0; i<(n-k); i++)
 			{
-				System.out.println("Plotting: a["+k+"]["+i);
 				tri[i][k] = (tri[i+1][k-1]-tri[i][k-1])/(x[i+k]-x[i]);
 			}
 		}
-		MatrixPlotter.plot(tri, n);
+		//MatrixPlotter.plot(tri, n);
 		f = new double[n];
 		a = new double[n];
 		//copy right/down diagonal into 'f' array, copy first line into 'a' array
@@ -155,7 +146,8 @@ public class NewtonPolynom implements InterpolationMethod {
 	 *            neuer Stuetzwert
 	 */
 	public void addSamplingPoint(double x_new, double y_new) {
-		/* TODO: test. fix if necessary */
+		
+		/* Tested */
 		int size = x.length;
 		double[] newx = new double[size+1];
 		
@@ -189,22 +181,17 @@ public class NewtonPolynom implements InterpolationMethod {
 	@Override
 	public double evaluate(double z) {
 		
-		/* TODO: test. fix if necessary */
-		//not faulty anymore?
-		System.out.print("p(x) = ");
+		/* Tested */
 		double result=0;
 		for(int i=0; i<f.length; i++)
 		{
-			System.out.print("+a["+i+"]");
 			double product = a[i];
 			for(int j=0; j<i;j++)
 			{
 				product*=(z-x[j]);
-				System.out.print("*(x-x["+j+"])");
 			}
 			result+=product;
 		}
-		System.out.print(" = " + result);
 		return result;
 	}
 }
