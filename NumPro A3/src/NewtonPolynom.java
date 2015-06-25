@@ -174,11 +174,9 @@ public class NewtonPolynom implements InterpolationMethod {
 		for(int i =1;i<f.length+1; i++)
 		{
 			f_new[i] = (f_new[i-1] - f[i-1]) / (x[0] - x[i]); 
-			if(i != f.length+1) {
-				a_new[i] = a[i]; 
-			} else
-				a_new[i] = f_new[i];
+			a_new[i] = a[i]; 
 		}
+		a_new[f.length+1] = f_new[f.length+1]; //loop goes till i = f.lenth
 		f = f_new;
 		a = a_new;
 	}

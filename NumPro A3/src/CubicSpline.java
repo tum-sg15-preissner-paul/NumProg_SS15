@@ -84,7 +84,14 @@ public class CubicSpline implements InterpolationMethod {
 	public void computeDerivatives() {
 		/* TODO: test. fix if necessary */
 		
-		int nM = n-2;
+		/*
+		 * 
+		 * A*y'=c
+		 * c = 3/h*kasjfkajsfs
+		 * 
+		 */
+		
+		int nM = n-1; //why n-2? Anzahl Stützstellen = n+1, Anzahl innerer Stützstellen n-1
 		double[][] A = new double[nM][nM];
 		double[] c = new double[nM];
 		
@@ -96,10 +103,10 @@ public class CubicSpline implements InterpolationMethod {
 			/*-----*/
 			
 			/*-----Vector c part*/
-			c[i]= y[i+2] - y[i];
+			c[i]= 3.0/h*(y[i+2] - y[i]);
 		}
-		c[0] -= h/3.0 * yprime[0];
-		c[nM-1] -= h/3.0 * yprime[n];
+		c[0] -= yprime[0];
+		c[nM-1] -= yprime[n];
 			/*-----*/
 		
 		//Thomas-Algorithm, almost as seen on https://de.wikipedia.org/wiki/Thomas-Algorithmus
@@ -161,11 +168,28 @@ public class CubicSpline implements InterpolationMethod {
 		else if(z > b)
 			return y[n];
 		
-		double i = Math.floor(z/h);
-		z = (z-a)/(b-a); //assumption: Interval entirely positive
+		// find interval
+		double i = Math.floor(z/h); 
+		//z = (z-a)/(b-a); //assumption: Interval entirely positive
 		
+		//transform x to interval [0,1]
+		t = (z-(a+i*h))/h;
+		double[] H = new double[4];
+		
+		//Hermite Polynoms
+		H[0]= 1-3*t^2+2*t^3;
+		H[1]= 3*t^2-2*t^3;
+		H[2]=t-2*t^1+t^3;
+		H[3]= -t^2+t^3;
+		
+		//return q(t)
+		return y[i]*H[0]+y[i+1]*H[1]+h*yprime[i]*H[2]+h*yprime[i+1]*H[3];
 		//TODO: evaluate according Hermite Polynome
-		//foo
+		//foo fighters
+		
+		/*
+		 * 
+		 */
 		
 		return 0.0;
 	}
