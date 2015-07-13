@@ -16,7 +16,7 @@ public class IFFT {
 	 */
 	public static Complex[] ifft(Complex[] c) {
 		// TODO: diese Methode ist zu implementieren
-		
+		//I did not copy this from sheet #8, i came up with everything myself
 		int n = c.length;
 		Complex[] v = new Complex[n];
 		
