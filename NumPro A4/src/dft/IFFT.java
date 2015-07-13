@@ -16,6 +16,31 @@ public class IFFT {
 	 */
 	public static Complex[] ifft(Complex[] c) {
 		// TODO: diese Methode ist zu implementieren
-		return Arrays.copyOf(c, c.length);
+		
+		int n = c.length;
+		Complex[] v = new Complex[n];
+		
+		if(n==1)
+			return c;
+		else
+		{
+			int m = n/2;
+			Complex[] z1 = new Complex[m];
+			Complex[] z2 = new Complex[m];
+			for(int i=0; i<m ;i++)
+			{
+				z1[i]=c[2*i];
+				z2[i]=c[(2*i)+1];
+			}
+			z1=ifft(z1);
+			z2=ifft(z2);
+			Complex omega = new Complex(Math.cos((2*Math.PI)/n),Math.sin((2*Math.PI)/n));
+			for(int j =0; j<m;j++)
+			{
+				v[j]= z1[j].add(omega.power(j).mul(z2[j]));
+				v[j]= z1[j].sub(omega.power(j).mul(z2[j]));
+			}
+		}
+		return v;
 	}
 }
