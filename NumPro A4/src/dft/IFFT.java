@@ -17,7 +17,7 @@ public class IFFT {
 	public static Complex[] ifft(Complex[] c) {
 		//as on Exercise Sheet 8
 		//some simple tests suggest it works
-		
+
 		int n = c.length;
 		Complex[] v = new Complex[n];
 		
@@ -40,8 +40,9 @@ public class IFFT {
 			Complex omega = new Complex(Math.cos((2*Math.PI)/n),Math.sin((2*Math.PI)/n));
 			for(int j =0; j<m;j++)
 			{
-				v[j]= z1[j].add(omega.power(j).mul(z2[j]));
-				v[j]= z1[j].sub(omega.power(j).mul(z2[j]));
+				
+				v[j]= z1[j].add((omega.power(j)).mul(z2[j]));
+				v[m+j]= z1[j].sub((omega.power(j)).mul(z2[j]));
 			}
 		}
 		return v;

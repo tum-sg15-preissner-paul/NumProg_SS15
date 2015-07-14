@@ -110,6 +110,7 @@ public class Test {
 
 		for (int i = 0; i < 4; i++) {
 			System.out.println(v2[i]);
+			System.out.println(v[i]);
 		}
 		System.out
 				.println("Richtig waeren gerundet: Eigene Beispiele ueberlegen");
