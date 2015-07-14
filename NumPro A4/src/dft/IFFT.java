@@ -15,11 +15,13 @@ public class IFFT {
 	 * Zweierpotenz ist. Es gilt also: c.length == 2^m fuer ein beliebiges m.
 	 */
 	public static Complex[] ifft(Complex[] c) {
-		// TODO: diese Methode ist zu implementieren
+		//as on Exercise Sheet 8
+		//some simple tests suggest it works
 		
 		int n = c.length;
 		Complex[] v = new Complex[n];
 		
+		//effectively turning point of butterfly. single value -> simply to "solve"
 		if(n==1)
 			return c;
 		else
@@ -32,6 +34,7 @@ public class IFFT {
 				z1[i]=c[2*i];
 				z2[i]=c[(2*i)+1];
 			}
+			//butterfly current vectors apart (until we're left with single values)
 			z1=ifft(z1);
 			z2=ifft(z2);
 			Complex omega = new Complex(Math.cos((2*Math.PI)/n),Math.sin((2*Math.PI)/n));

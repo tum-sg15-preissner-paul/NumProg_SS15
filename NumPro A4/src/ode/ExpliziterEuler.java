@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class ExpliziterEuler implements Einschrittverfahren {
 
 	public double[] nextStep(double[] y_k, double t, double delta_t, ODE ode) {
-		// TODO: test
+		//tests suggest it works, + Tutor exercise provides same solution
 		
 		//f = f(t,r(t)) as in task sheet
 		double[] f = ode.auswerten(t, y_k);

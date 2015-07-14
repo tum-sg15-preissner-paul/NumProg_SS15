@@ -29,9 +29,7 @@ public class Complex {
 	 *
 	 * @return "this + other"
 	 */
-	public Complex add(Complex other) {
-		// TODO: test
-		
+	public Complex add(Complex other) {		
 		//x+y = (a+bi) + (c+di) = (a+c) + (b+d)i
 		/*Complex res = new Complex();
 		res.real = this.real + other.real;
@@ -46,8 +44,6 @@ public class Complex {
 	 * @return "this - other"
 	 */
 	public Complex sub(Complex other) {
-		// TODO: test
-		
 		//x-y = (a+bi) - (c+di) = (a-c) + (b-d)i
 		/*Complex res = new Complex();
 		res.real = this.real - other.real;
@@ -62,8 +58,6 @@ public class Complex {
 	 * @return "this * other"
 	 */
 	public Complex mul(Complex other) {
-		// TODO: test
-		
 		//x*y = (a+bi) * (c+di) = (ac-bd) + (ad+bc)i
 		/*Complex res = new Complex();
 		res.real = (this.real*other.real) - (this.imaginary*other.imaginary);
@@ -143,8 +137,6 @@ public class Complex {
 	 * Winkel phi.
 	 */
 	public static Complex fromPolar(double r, double phi) {
-		// TODO: test
-		
 		//z = r * e^iphi = r * (cos phi + i * sin phi)
 		// = (r * cos phi) + (r * sin phi)i
 		// -> a = r*cos phi; b = r*sin phi
